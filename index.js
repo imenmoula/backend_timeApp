@@ -33,14 +33,35 @@ db.connect((err) => {
 // ===== Route pour l'enregistrement (Register) =====
 app.post('/register', (req, res) => {
     const { email, password } = req.body;
-    const hashedPassword = bcrypt.hashSync(password, 10); // Hasher le mot de passe
   
-    const query = `INSERT INTO users (email, password) VALUES (?, ?)`;
-    db.query(query, [email, hashedPassword], (err, result) => {
+    // Validate input
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required.' });
+    }
+  
+    // Check if the email is already in use
+    const emailQuery = 'SELECT * FROM users WHERE email = ?';
+    db.query(emailQuery, [email], (err, result) => {
       if (err) {
         return res.status(500).json({ error: err.message });
       }
-      res.status(201).json({ message: 'Utilisateur enregistré avec succès !' });
+      if (result.length > 0) {
+        return res.status(409).json({ error: 'Email is already registered.' });
+      }
+  
+      // Hash the password
+      const hashedPassword = bcrypt.hashSync(password, 10);
+  
+      // Insert new user into the database
+      const query = 'INSERT INTO users (email, password) VALUES (?, ?)';
+      db.query(query, [email, hashedPassword], (err, result) => {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+  
+        // Send success response
+        res.status(201).json({ message: 'User successfully registered!' });
+      });
     });
   });
   
@@ -49,22 +70,33 @@ app.post('/register', (req, res) => {
     const { email, password } = req.body;
   
     const query = `SELECT * FROM users WHERE email = ?`;
+    
     db.query(query, [email], (err, result) => {
       if (err || result.length === 0) {
-        return res.status(400).json({ error: 'Utilisateur non trouvé' });
+        return res.status(400).json({ error: 'Utilisateur non trouvé ' });
       }
   
       const user = result[0];
-      if (!bcrypt.compareSync(password, user.password)) {
-        return res.status(400).json({ error: 'Mot de passe incorrect' });
-      }
   
-      // Générer un token JWT
-      const token = jwt.sign({ id: user.id, email: user.email }, secretKey, {
-        expiresIn: '1h',  // Le token expire dans 1 heure
+      // Compare the provided password with the hashed password in the database
+      bcrypt.compare(password, user.password, (err, isMatch) => {
+        if (err) {
+          return res.status(500).json({ error: 'Erreur lors de la vérification du mot de passe' });
+        }
+  
+        if (!isMatch) {
+          return res.status(400).json({ error: 'Mot de passe incorrect' });
+        }
+  
+        // If the password matches, return a success message (excluding sensitive data)
+        return res.status(200).json({
+          message: `Bienvenue, ${user.email}!`,
+          user: {
+            email: user.email,
+            // You can return other safe information if needed, but **never** return the password
+          },
+        });
       });
-  
-      res.json({ message: 'Connexion réussie', token });
     });
   });
   
