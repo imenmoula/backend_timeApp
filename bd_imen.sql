@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `classes` (
   CONSTRAINT `classes_ibfk_1` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`subject_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table imen.classes : ~0 rows (environ)
+-- Listage des données de la table imen.classes : ~2 rows (environ)
 INSERT INTO `classes` (`class_id`, `subject_id`, `class_name`) VALUES
 	('C001', 'S001', 'Mathematics 101 - Section A'),
 	('C002', 'S002', 'Physics 101 - Section B');
@@ -44,11 +44,11 @@ CREATE TABLE IF NOT EXISTS `rooms` (
   PRIMARY KEY (`room_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table imen.rooms : ~0 rows (environ)
+-- Listage des données de la table imen.rooms : ~3 rows (environ)
 INSERT INTO `rooms` (`room_id`, `room_name`, `capacity`, `building`, `floor`) VALUES
-	('', 'uuuuuu', 0, '', 0),
 	('R101', 'Room 101', 30, 'Building A', 1),
-	('R102', 'Room 102', 25, 'Building B', 2);
+	('R102', 'Room 102', 25, 'Building B', 2),
+	('R103', 'uuuuuu', 1, 'building', 12);
 
 -- Listage de la structure de table imen. sessions
 CREATE TABLE IF NOT EXISTS `sessions` (
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `students` (
   PRIMARY KEY (`student_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table imen.students : ~0 rows (environ)
+-- Listage des données de la table imen.students : ~3 rows (environ)
 INSERT INTO `students` (`student_id`, `first_name`, `last_name`, `email`) VALUES
 	('ST001', 'Alice', 'Johnson', 'alice.johnson@example.com'),
 	('ST002', 'Bob', 'Williams', 'bob.williams@example.com'),
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `subjects` (
   PRIMARY KEY (`subject_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table imen.subjects : ~0 rows (environ)
+-- Listage des données de la table imen.subjects : ~2 rows (environ)
 INSERT INTO `subjects` (`subject_id`, `subject_name`, `subject_code`, `department`, `description`) VALUES
 	('S001', 'Mathematics 101', 'MATH101', 'Mathematics', 'Introduction to Algebra and Calculus'),
 	('S002', 'Physics 101', 'PHYS101', 'Physics', 'Fundamentals of Physics');
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `teachers` (
   PRIMARY KEY (`teacher_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table imen.teachers : ~0 rows (environ)
+-- Listage des données de la table imen.teachers : ~2 rows (environ)
 INSERT INTO `teachers` (`teacher_id`, `first_name`, `last_name`, `email`, `department`, `phone`) VALUES
 	('T001', 'John', 'Doe', 'johndoe@example.com', 'Mathematics', '1234567890'),
 	('T002', 'Jane', 'Smith', 'janesmith@example.com', 'Physics', '0987654321');
